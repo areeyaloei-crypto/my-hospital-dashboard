@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปผลการดำเนินงาน โครงการ ปี 2569</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Prompt', sans-serif; background-color: #f4f7fa; color: #333; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        /* ส่วนหัว Header */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header-title h1 { color: #008080; font-size: 24px; font-weight: 600; }
+        .header-title p { color: #666; font-size: 14px; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .date-badge { background-color: #fef3c7; color: #b45309; padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+        .btn { padding: 8px 16px; border-radius: 20px; color: white; border: none; cursor: pointer; font-family: 'Prompt'; font-size: 14px; }
+        .btn-green { background-color: #059669; }
+        .btn-blue { background-color: #0284c7; }
+
+        /* การ์ดสรุปด้านบน 4 กล่อง */
+        .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; position: relative; overflow: hidden; }
+        .card-top-line-1 { border-top: 4px solid #059669; }
+        .card-top-line-2 { border-top: 4px solid #0284c7; }
+        .card-top-line-3 { border-top: 4px solid #3b82f6; }
+        .card-top-line-4 { border-top: 4px solid #8b5cf6; }
+        .card-value { font-size: 28px; font-weight: 600; color: #1f2937; margin-bottom: 5px; }
+        .card-label { font-size: 13px; color: #6b7280; }
+
+        /* ส่วนกราฟแท่งแนวนอน 2 คอลัมน์ */
+        .charts-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+        .chart-box { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+        .chart-title { font-size: 16px; font-weight: 500; margin-bottom: 15px; color: #374151; display: flex; align-items: center; gap: 8px; }
+        .progress-row { display: flex; align-items: center; margin-bottom: 12px; }
+        .progress-label { width: 120px; font-size: 14px; color: #4b5563; }
+        .progress-bar-bg { flex-grow: 1; background-color: #f3f4f6; height: 12px; border-radius: 10px; overflow: hidden; margin-right: 15px; }
+        .progress-bar-fill { height: 100%; border-radius: 10px; }
+        .progress-value { width: 60px; text-align: right; font-size: 14px; font-weight: 500; }
+
+        /* ส่วนตารางด้านล่าง */
+        .table-box { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
+        th { background-color: #f8fafc; color: #008080; font-weight: 500; }
+        tr:hover { background-color: #f9fafb; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .bg-in-plan { background-color: #dcfce7; color: #166534; }
+        .bg-out-plan { background-color: #ffedd5; color: #9a3412; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="header-title">
+            <h1>สรุปทะเบียนคุมโครงการ โรงพยาบาลนครนายก</h1>
+            <p>ข้อมูลการจัดทำโครงการจำแนกตามยุทธศาสตร์ และแหล่งงบประมาณ ปี 2569</p>
+        </div>
+        <div class="header-actions">
+            <div class="date-badge">⏳ ข้อมูล ณ วันที่ 1/4/2569</div>
+            <button class="btn btn-green">🖨️ พิมพ์รายงาน</button>
+            <button class="btn btn-blue">👤 สำหรับเจ้าหน้าที่</button>
+        </div>
+    </div>
+
+    <div class="summary-cards">
+        <div class="card card-top-line-1">
+            <div class="card-value">14 <span style="font-size: 16px;">โครงการ</span></div>
+            <div class="card-label">จำนวนโครงการทั้งหมดในปีงบประมาณ</div>
+        </div>
+        <div class="card card-top-line-2">
+            <div class="card-value">855,464 <span style="font-size: 16px;">บาท</span></div>
+            <div class="card-label">งบประมาณรวมทั้งสิ้น</div>
+        </div>
+        <div class="card card-top-line-3">
+            <div class="card-value">9 / 5</div>
+            <div class="card-label">โครงการในแผน / นอกแผน (โครงการ)</div>
+        </div>
+        <div class="card card-top-line-4">
+            <div class="card-value">ยุทธ 4</div>
+            <div class="card-label">ยุทธศาสตร์ที่มีโครงการมากที่สุด (9 โครงการ)</div>
+        </div>
+    </div>
+
+    <div class="charts-row">
+        <div class="chart-box">
+            <div class="chart-title">📊 สัดส่วนตามแหล่งงบประมาณ (โครงการ)</div>
+            <div class="progress-row">
+                <div class="progress-label">เงินบำรุง</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 57%; background-color: #0ea5e9;"></div></div>
+                <div class="progress-value">8 (57%)</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-label">เงินงบประมาณ</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 29%; background-color: #38bdf8;"></div></div>
+                <div class="progress-value">4 (29%)</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-label">ไม่ใช้งบ</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 14%; background-color: #cbd5e1;"></div></div>
+                <div class="progress-value">2 (14%)</div>
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <div class="chart-title">🎯 โครงการแยกตามยุทธศาสตร์ (โครงการ)</div>
+            <div class="progress-row">
+                <div class="progress-label">ยุทธศาสตร์ 4</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 64%; background-color: #059669;"></div></div>
+                <div class="progress-value">9 (64%)</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-label">ยุทธศาสตร์ 3</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 21%; background-color: #10b981;"></div></div>
+                <div class="progress-value">3 (21%)</div>
+            </div>
+            <div class="progress-row">
+                <div class="progress-label">ยุทธศาสตร์ 1, 2</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 15%; background-color: #6ee7b7;"></div></div>
+                <div class="progress-value">2 (15%)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-box">
+        <div class="chart-title">📑 ตารางข้อมูลโครงการรายหน่วยงาน (ตัวอย่าง)</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>กลุ่มงาน</th>
+                    <th>ชื่อโครงการ</th>
+                    <th>ยุทธศาสตร์</th>
+                    <th>งบประมาณ (บาท)</th>
+                    <th>ประเภท</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>เวชกรรมสังคม</td>
+                    <td>โครงการราชทัณฑ์ปันสุข ทำความดี เพื่อชาติ ศาสน์ กษัตริย์</td>
+                    <td>ยุทธ 3</td>
+                    <td>140,000</td>
+                    <td><span class="badge bg-in-plan">ในแผน</span></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>ศัลยกรรม</td>
+                    <td>โครงการพัฒนาระบบบริการสุขภาพ สาขาศัลยกรรม</td>
+                    <td>ยุทธ 4</td>
+                    <td>24,696</td>
+                    <td><span class="badge bg-in-plan">ในแผน</span></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>สุขศึกษา</td>
+                    <td>โครงการเพิ่มพูนทักษะการนวดไทยประยุกต์</td>
+                    <td>ยุทธ 4</td>
+                    <td>0</td>
+                    <td><span class="badge bg-out-plan">นอกแผน</span></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>กลุ่มการพยาบาล</td>
+                    <td>โครงการพัฒนาบุคลากรด้านดิจิทัล (AI Academy Nurse)</td>
+                    <td>ยุทธ 4</td>
+                    <td>20,200</td>
+                    <td><span class="badge bg-out-plan">นอกแผน</span></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>พัฒนารัพยากรบุคคล</td>
+                    <td>โครงการเสริมสร้างทัศนคติเชิงบวกและทักษะทางใจ</td>
+                    <td>ยุทธ 4</td>
+                    <td>53,656</td>
+                    <td><span class="badge bg-in-plan">ในแผน</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
