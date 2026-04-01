@@ -3,186 +3,356 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สรุปผลการดำเนินงาน โครงการ ปี 2569</title>
+    <title>สรุปผลการดำเนินงาน ทะเบียนคุมโครงการ ปี 2569 - โรงพยาบาลนครนายก</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* --- CSS Global Styles (เลียนแบบโทนสีและสไตล์จากภาพตัวอย่าง) --- */
+        :root {
+            --primary-color: #00695C; /* สีเขียวหัวเป็ดหลัก */
+            --bg-color: #F5F5F5; /* สีพื้นหลังเทาอ่อนมากๆ */
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-sub: #666666;
+            --border-color: #E0E0E0;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Prompt', sans-serif; background-color: #f4f7fa; color: #333; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        body { font-family: 'Prompt', sans-serif; background-color: var(--bg-color); color: var(--text-main); padding-bottom: 40px; }
         
-        /* ส่วนหัว Header */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-title h1 { color: #008080; font-size: 24px; font-weight: 600; }
-        .header-title p { color: #666; font-size: 14px; }
-        .header-actions { display: flex; gap: 10px; align-items: center; }
-        .date-badge { background-color: #fef3c7; color: #b45309; padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: 500; }
-        .btn { padding: 8px 16px; border-radius: 20px; color: white; border: none; cursor: pointer; font-family: 'Prompt'; font-size: 14px; }
-        .btn-green { background-color: #059669; }
-        .btn-blue { background-color: #0284c7; }
+        /* --- Header (แถบสีเขียวด้านบน) --- */
+        .main-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header-title { display: flex; align-items: center; gap: 15px; }
+        .logo-placeholder { width: 40px; height: 40px; background-color: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .header-title h1 { font-size: 20px; font-weight: 500; }
+        .header-title p { font-size: 12px; opacity: 0.8; font-weight: 300; }
+        .current-date { background-color: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; font-size: 13px; }
 
-        /* การ์ดสรุปด้านบน 4 กล่อง */
-        .summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
-        .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; position: relative; overflow: hidden; }
-        .card-top-line-1 { border-top: 4px solid #059669; }
-        .card-top-line-2 { border-top: 4px solid #0284c7; }
-        .card-top-line-3 { border-top: 4px solid #3b82f6; }
-        .card-top-line-4 { border-top: 4px solid #8b5cf6; }
-        .card-value { font-size: 28px; font-weight: 600; color: #1f2937; margin-bottom: 5px; }
-        .card-label { font-size: 13px; color: #6b7280; }
+        /* --- Main Content Layout --- */
+        .dashboard-container { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
 
-        /* ส่วนกราฟแท่งแนวนอน 2 คอลัมน์ */
-        .charts-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
-        .chart-box { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
-        .chart-title { font-size: 16px; font-weight: 500; margin-bottom: 15px; color: #374151; display: flex; align-items: center; gap: 8px; }
-        .progress-row { display: flex; align-items: center; margin-bottom: 12px; }
-        .progress-label { width: 120px; font-size: 14px; color: #4b5563; }
-        .progress-bar-bg { flex-grow: 1; background-color: #f3f4f6; height: 12px; border-radius: 10px; overflow: hidden; margin-right: 15px; }
-        .progress-bar-fill { height: 100%; border-radius: 10px; }
-        .progress-value { width: 60px; text-align: right; font-size: 14px; font-weight: 500; }
+        /* --- Loading State --- */
+        #loading { text-align: center; padding: 100px; font-size: 18px; color: var(--primary-color); }
+        #dashboard-content { display: none; } /* ซ่อนไว้ก่อนจนกว่าข้อมูลจะมา */
 
-        /* ส่วนตารางด้านล่าง */
-        .table-box { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
-        th { background-color: #f8fafc; color: #008080; font-weight: 500; }
-        tr:hover { background-color: #f9fafb; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; }
-        .bg-in-plan { background-color: #dcfce7; color: #166534; }
-        .bg-out-plan { background-color: #ffedd5; color: #9a3412; }
+        /* --- KPI Cards (การ์ดตัวเลข 4 กล่องด้านบน) --- */
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 20px; }
+        .kpi-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            border-left: 4px solid var(--primary-color); /* เส้นสีด้านซ้ายแบบภาพตัวอย่าง */
+        }
+        .kpi-title { font-size: 14px; color: var(--text-sub); margin-bottom: 10px; }
+        .kpi-value { font-size: 32px; font-weight: 600; color: var(--primary-color); }
+        .kpi-unit { font-size: 14px; color: var(--text-sub); margin-left: 5px; font-weight: 400; }
+
+        /* --- Charts and Detailed Section Layout --- */
+        .details-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 20px; }
+        
+        /* --- Chart Cards --- */
+        .chart-section-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .section-title { font-size: 16px; font-weight: 500; color: var(--text-main); margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .chart-container { position: relative; height: 250px; width: 100%; }
+
+        /* --- Table Section --- */
+        .table-section-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .table-wrapper { overflow-x: auto; max-height: 400px; overflow-y: auto; } /* เพิ่ม Scroll */
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { text-align: left; padding: 12px 15px; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+        th { background-color: #F9FAFB; color: var(--primary-color); font-weight: 500; position: sticky; top: 0; z-index: 10; }
+        tr:hover { background-color: #F9FAFB; }
+
+        /* --- Badges for Status (เลียนแบบภาพตัวอย่าง Telemed) --- */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; display: inline-block; text-align: center; }
+        .bg-in-plan { background-color: #E0F2F1; color: #00796B; } /* สีเขียวอ่อนสำหรับ ในแผน */
+        .bg-out-plan { background-color: #FFF3E0; color: #E65100; } /* สีส้มอ่อนสำหรับ นอกแผน */
+
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <div class="header-title">
-            <h1>สรุปทะเบียนคุมโครงการ โรงพยาบาลนครนายก</h1>
-            <p>ข้อมูลการจัดทำโครงการจำแนกตามยุทธศาสตร์ และแหล่งงบประมาณ ปี 2569</p>
-        </div>
-        <div class="header-actions">
-            <div class="date-badge">⏳ ข้อมูล ณ วันที่ 1/4/2569</div>
-            <button class="btn btn-green">🖨️ พิมพ์รายงาน</button>
-            <button class="btn btn-blue">👤 สำหรับเจ้าหน้าที่</button>
+<header class="main-header">
+    <div class="header-title">
+        <div class="logo-placeholder">NYK</div>
+        <div>
+            <h1>หน้าสรุปผลการดำเนินงาน ทะเบียนคุมโครงการ (Dashboard)</h1>
+            <p>โรงพยาบาลนครนายก | ปีงบประมาณ 2569</p>
         </div>
     </div>
+    <div class="current-date" id="header-date">ข้อมูล ณ วันที่ --/--/----</div>
+</header>
 
-    <div class="summary-cards">
-        <div class="card card-top-line-1">
-            <div class="card-value">14 <span style="font-size: 16px;">โครงการ</span></div>
-            <div class="card-label">จำนวนโครงการทั้งหมดในปีงบประมาณ</div>
-        </div>
-        <div class="card card-top-line-2">
-            <div class="card-value">855,464 <span style="font-size: 16px;">บาท</span></div>
-            <div class="card-label">งบประมาณรวมทั้งสิ้น</div>
-        </div>
-        <div class="card card-top-line-3">
-            <div class="card-value">9 / 5</div>
-            <div class="card-label">โครงการในแผน / นอกแผน (โครงการ)</div>
-        </div>
-        <div class="card card-top-line-4">
-            <div class="card-value">ยุทธ 4</div>
-            <div class="card-label">ยุทธศาสตร์ที่มีโครงการมากที่สุด (9 โครงการ)</div>
-        </div>
-    </div>
+<div class="dashboard-container">
+    
+    <div id="loading">กำลังประมวลผลข้อมูลชีต... ⏳</div>
 
-    <div class="charts-row">
-        <div class="chart-box">
-            <div class="chart-title">📊 สัดส่วนตามแหล่งงบประมาณ (โครงการ)</div>
-            <div class="progress-row">
-                <div class="progress-label">เงินบำรุง</div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 57%; background-color: #0ea5e9;"></div></div>
-                <div class="progress-value">8 (57%)</div>
+    <div id="dashboard-content">
+        
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-title">จำนวนโครงการทั้งหมด</div>
+                <div class="kpi-value" id="kpi-total-projects">0</div>
+                <div class="kpi-unit">โครงการ</div>
             </div>
-            <div class="progress-row">
-                <div class="progress-label">เงินงบประมาณ</div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 29%; background-color: #38bdf8;"></div></div>
-                <div class="progress-value">4 (29%)</div>
+            <div class="kpi-card">
+                <div class="kpi-title">งบประมาณรวมทั้งสิ้น</div>
+                <div class="kpi-value" id="kpi-total-budget">0</div>
+                <div class="kpi-unit">บาท</div>
             </div>
-            <div class="progress-row">
-                <div class="progress-label">ไม่ใช้งบ</div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 14%; background-color: #cbd5e1;"></div></div>
-                <div class="progress-value">2 (14%)</div>
+            <div class="kpi-card">
+                <div class="kpi-title">โครงการในแผน / นอกแผน</div>
+                <div class="kpi-value"><span id="kpi-in-plan">0</span> / <span id="kpi-out-plan" style="color: #E65100">0</span></div>
+                <div class="kpi-unit">โครงการ</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">ยุทธศาสตร์ที่มีโครงการมากที่สุด</div>
+                <div class="kpi-value" id="kpi-top-strategy" style="font-size: 24px;">-</div>
+                <div class="kpi-unit" id="kpi-top-strategy-count">0 โครงการ</div>
             </div>
         </div>
 
-        <div class="chart-box">
-            <div class="chart-title">🎯 โครงการแยกตามยุทธศาสตร์ (โครงการ)</div>
-            <div class="progress-row">
-                <div class="progress-label">ยุทธศาสตร์ 4</div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 64%; background-color: #059669;"></div></div>
-                <div class="progress-value">9 (64%)</div>
+        <div class="details-grid">
+            
+            <div style="display: grid; gap: 20px; grid-template-rows: repeat(2, 1fr);">
+                <div class="chart-section-card">
+                    <div class="section-title">📊 สัดส่วนโครงการแยกตามแหล่งงบประมาณ</div>
+                    <div class="chart-container">
+                        <canvas id="budgetSourceChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-section-card">
+                    <div class="section-title">🎯 จำนวนโครงการแยกตามยุทธศาสตร์</div>
+                    <div class="chart-container">
+                        <canvas id="strategyChart"></canvas>
+                    </div>
+                </div>
             </div>
-            <div class="progress-row">
-                <div class="progress-label">ยุทธศาสตร์ 3</div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 21%; background-color: #10b981;"></div></div>
-                <div class="progress-value">3 (21%)</div>
-            </div>
-            <div class="progress-row">
-                <div class="progress-label">ยุทธศาสตร์ 1, 2</div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 15%; background-color: #6ee7b7;"></div></div>
-                <div class="progress-value">2 (15%)</div>
-            </div>
-        </div>
-    </div>
 
-    <div class="table-box">
-        <div class="chart-title">📑 ตารางข้อมูลโครงการรายหน่วยงาน (ตัวอย่าง)</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>ลำดับ</th>
-                    <th>กลุ่มงาน</th>
-                    <th>ชื่อโครงการ</th>
-                    <th>ยุทธศาสตร์</th>
-                    <th>งบประมาณ (บาท)</th>
-                    <th>ประเภท</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>เวชกรรมสังคม</td>
-                    <td>โครงการราชทัณฑ์ปันสุข ทำความดี เพื่อชาติ ศาสน์ กษัตริย์</td>
-                    <td>ยุทธ 3</td>
-                    <td>140,000</td>
-                    <td><span class="badge bg-in-plan">ในแผน</span></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>ศัลยกรรม</td>
-                    <td>โครงการพัฒนาระบบบริการสุขภาพ สาขาศัลยกรรม</td>
-                    <td>ยุทธ 4</td>
-                    <td>24,696</td>
-                    <td><span class="badge bg-in-plan">ในแผน</span></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>สุขศึกษา</td>
-                    <td>โครงการเพิ่มพูนทักษะการนวดไทยประยุกต์</td>
-                    <td>ยุทธ 4</td>
-                    <td>0</td>
-                    <td><span class="badge bg-out-plan">นอกแผน</span></td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>กลุ่มการพยาบาล</td>
-                    <td>โครงการพัฒนาบุคลากรด้านดิจิทัล (AI Academy Nurse)</td>
-                    <td>ยุทธ 4</td>
-                    <td>20,200</td>
-                    <td><span class="badge bg-out-plan">นอกแผน</span></td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>พัฒนารัพยากรบุคคล</td>
-                    <td>โครงการเสริมสร้างทัศนคติเชิงบวกและทักษะทางใจ</td>
-                    <td>ยุทธ 4</td>
-                    <td>53,656</td>
-                    <td><span class="badge bg-in-plan">ในแผน</span></td>
-                </tr>
-            </tbody>
-        </table>
+            <div class="table-section-card">
+                <div class="section-title">📑 ตารางรายละเอียดโครงการจำแนกรายหน่วยงาน</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>กลุ่มงาน</th>
+                                <th>ชื่อโครงการ</th>
+                                <th>ยุทธศาสตร์</th>
+                                <th>งบประมาณ (บาท)</th>
+                                <th>ประเภท</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
+<script>
+    // --- JavaScript for Data Fetching and Chart Rendering ---
+
+    // 🔴 1. นำ Sheet ID ของคุณ วางแทนที่ข้อความด้านล่างนี้
+    const SHEET_ID = '1FhKnZPFG6GkID0BX4YRxB8Vs4L95ICzB5O4Lk5Fx1WI'; 
+    
+    // URL สำหรับดึงข้อมูลแบบ JSON ผ่าน Google Visualization API
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+    // กำหนดโทนสีสำหรับกราฟ (เลียนแบบโทนสีเขียว/ฟ้าจากภาพตัวอย่าง)
+    const chartColors = [
+        '#00897B', // Tealหลัก
+        '#26A69A', // Tealอ่อน
+        '#80CBC4', // Tealจาง
+        '#B2DFDB', // Tealจางมาก
+        '#4DB6AC'  // Tealกลาง
+    ];
+
+    let budgetSourceChart, strategyChart;
+
+    fetch(url)
+        .then(res => res.text())
+        .then(text => {
+            // ตัดคำว่า "google.visualization.Query.setResponse(...);" ออกเพื่อให้เหลือแค่ JSON เปียวๆ
+            const jsonString = text.substring(47, text.length - 2);
+            const data = JSON.parse(jsonString);
+            const rows = data.table.rows;
+            
+            // ประมวลผลข้อมูล
+            processData(rows);
+            
+            // อัปเดตวันที่ใน Header
+            const today = new Date();
+            document.getElementById('header-date').innerText = `ข้อมูล ณ วันที่ ${today.toLocaleDateString('th-TH')}`;
+
+            // ซ่อนหน้าต่างโหลด และแสดง Dashboard
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('dashboard-content').style.display = 'block';
+        })
+        .catch(error => {
+            document.getElementById('loading').innerHTML = `❌ ไม่สามารถดึงข้อมูลได้ <br><br> <span style="font-size:14px; color:#666">โปรดตรวจสอบ: <br>1. การตั้งค่าสิทธิ์แชร์ชีต (ต้องเป็น "ทุกคนที่มีลิงก์" + "สิทธิ์อ่าน") <br>2. ID ของชีตในโค้ด <br>3. อินเทอร์เน็ต</span>`;
+            console.error('Error fetching data:', error);
+        });
+
+    function processData(rows) {
+        let totalProjects = 0;
+        let totalBudget = 0;
+        let inPlan = 0, outPlan = 0;
+        let strategies = {};
+        let budgetSources = {};
+        let tableHTML = '';
+
+        // วนลูปอ่านข้อมูลทีละแถว (ข้ามแถวหัวข้ออัตโนมัติ)
+        rows.forEach((row, index) => {
+            // ตรวจสอบว่ามีข้อมูลชื่อโครงการหรือไม่ (คอลัมน์ G คือ index 6) ถ้าไม่มีให้ข้าม
+            if (!row.c || !row.c[6] || !row.c[6].v) return; 
+
+            totalProjects++;
+
+            const group = row.c[4] ? row.c[4].v : '-'; // คอลัมน์ E กลุ่มงาน
+            const strategy = row.c[5] ? row.c[5].v : '-'; // คอลัมน์ F ยุทธศาสตร์
+            const projectName = row.c[6] ? row.c[6].v : '-'; // คอลัมน์ G ชื่อโครงการ
+            const budget = row.c[7] ? Number(row.c[7].v) : 0; // คอลัมน์ H งบประมาณ
+            const source = row.c[8] ? row.c[8].v : 'ไม่ระบุ'; // คอลัมน์ I แหล่งงบ
+            const planType = row.c[9] ? row.c[9].v : '-'; // คอลัมน์ J ประเภท
+
+            // คำนวณงบประมาณรวม
+            totalBudget += budget;
+
+            // นับในแผน/นอกแผน
+            if (planType.includes('ในแผน')) inPlan++;
+            else if (planType.includes('นอกแผน')) outPlan++;
+
+            // เก็บรวบรวมข้อมูลยุทธศาสตร์
+            strategies[strategy] = (strategies[strategy] || 0) + 1;
+
+            // เก็บรวบรวมข้อมูลแหล่งงบประมาณ
+            budgetSources[source] = (budgetSources[source] || 0) + 1;
+
+            // สร้าง HTML สำหรับตาราง
+            const badgeClass = planType.includes('ในแผน') ? 'bg-in-plan' : 'bg-out-plan';
+            tableHTML += `
+                <tr>
+                    <td>${group}</td>
+                    <td>${projectName}</td>
+                    <td>${strategy}</td>
+                    <td>${budget.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td><span class="badge ${badgeClass}">${planType}</span></td>
+                </tr>
+            `;
+        });
+
+        // 2. อัปเดตกล่องสรุปตัวเลข (KPI Cards)
+        document.getElementById('kpi-total-projects').innerText = totalProjects;
+        document.getElementById('kpi-total-budget').innerText = totalBudget.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('kpi-in-plan').innerText = inPlan;
+        document.getElementById('kpi-out-plan').innerText = outPlan;
+        
+        // หายุทธศาสตร์ที่เยอะที่สุด
+        let topStrategy = '-';
+        let topCount = 0;
+        for (const [strat, count] of Object.entries(strategies)) {
+            if (count > topCount) {
+                topCount = count;
+                topStrategy = strat;
+            }
+        }
+        document.getElementById('kpi-top-strategy').innerText = topStrategy;
+        document.getElementById('kpi-top-strategy-count').innerText = `${topCount} โครงการ`;
+
+        // 3. แทรกข้อมูลลงตาราง
+        document.getElementById('table-body').innerHTML = tableHTML;
+
+        // 4. สร้างกราฟ
+        renderCharts(budgetSources, strategies);
+    }
+
+    function renderCharts(budgetSourcesData, strategiesData) {
+        // --- กราฟวงกลมแหล่งงบประมาณ (Doughnut Chart แบบภาพตัวอย่าง) ---
+        const ctxSource = document.getElementById('budgetSourceChart').getContext('2d');
+        const sourceLabels = Object.keys(budgetSourcesData);
+        const sourceValues = Object.values(budgetSourcesData);
+
+        if (budgetSourceChart) budgetSourceChart.destroy(); // ทำลายกราฟเก่าถ้ามี
+        budgetSourceChart = new Chart(ctxSource, {
+            type: 'doughnut',
+            data: {
+                labels: sourceLabels,
+                datasets: [{
+                    data: sourceValues,
+                    backgroundColor: chartColors,
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right', labels: { font: { family: 'Prompt', size: 12 } } }
+                },
+                cutout: '70%' // ทำให้ตรงกลางกลวงแบบภาพตัวอย่าง Telemed
+            }
+        });
+
+        // --- กราฟแท่งยุทธศาสตร์ (Bar Chart) ---
+        const ctxStrategy = document.getElementById('strategyChart').getContext('2d');
+        // เรียงลำดับยุทธศาสตร์จากมากไปน้อย
+        const sortedStrategies = Object.entries(strategiesData).sort((a, b) => b[1] - a[1]);
+        const strategyLabels = sortedStrategies.map(item => item[0]);
+        const strategyValues = sortedStrategies.map(item => item[1]);
+
+        if (strategyChart) strategyChart.destroy();
+        strategyChart = new Chart(ctxStrategy, {
+            type: 'bar',
+            data: {
+                labels: strategyLabels,
+                datasets: [{
+                    label: 'จำนวนโครงการ',
+                    data: strategyValues,
+                    backgroundColor: chartColors[0], // ใช้สีหลักสีเดียว
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, ticks: { font: { family: 'Prompt' } } },
+                    x: { ticks: { font: { family: 'Prompt', size: 11 } } }
+                },
+                plugins: {
+                    legend: { display: false } // ซ่อน Legend เพราะมีแกนบอกอยู่แล้ว
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>
